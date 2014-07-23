@@ -1,0 +1,12 @@
+{
+  "name": "twilightbot",
+  "version": "0.1.1",
+  "author": "tdlive aw'sum <iam@tdlive.me>",
+  "main": "./iwritelists.js",
+  "dependencies": {
+    "steam": "0.6.6"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
+}
