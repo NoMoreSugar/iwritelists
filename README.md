@@ -4,6 +4,8 @@ A modular Steam chat bot framework based on node-steam.
 
 ## Installing
 
+It's really simple, I promise!
+
     git clone https://github.com/NoMoreSugar/iwritelists
     cd iwritelists
     npm install
@@ -11,12 +13,33 @@ A modular Steam chat bot framework based on node-steam.
 
 Note that any special instructions involving [ursa](https://github.com/Medium/ursa) on Windows will need to be observed.
 
-For a basic command implementation (with a recommended "about" command)
+To install a basic command implementation (with a recommended "about" command):
 
     cd plugins
     git clone https://github.com/NoMoreSugar/iwritelists-basicbot
     cd iwritelists-basicbot
     npm install
+
+## Writing Plugins
+
+Plugins are ordinary Node modules. They have a package.json, etc., and are placed in their own directory in ./plugins/.
+
+    var init = function(twimod){
+       
+       eh = twimod.eventHandler;
+       
+       // register some kind of event
+       eh.registerEvent("loggedOn", function(){
+            console.log("event fired!!");
+       });
+       
+       // now a command
+       eh.registerCommand("myamazingcommand", function(msg){
+            msg.reply("2amazing4u");
+       });
+    }
+    
+    module.exports=init;
 
 ## Credits
 
