@@ -134,6 +134,11 @@ events.defaultLogonHandler = function(){
   twimod.steam = Steam;
 
   L.debug("Reading ./plugins/");
+
+  if( ! fs.existsSync("./plugins/") ){
+    fs.mkdirSync("./plugins/");
+  }
+
   fs.readdirSync("./plugins/").forEach(function(v,k){
     if( ! fs.lstatSync("./plugins/" + v).isDirectory()) return;
     L.debug("Loading plugin " + v);
