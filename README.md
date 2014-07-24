@@ -5,10 +5,18 @@ A modular Steam chat bot framework based on node-steam.
 ## Installing
 
     git clone https://github.com/NoMoreSugar/iwritelists
+    cd iwritelists
     npm install
 
 
 Note that any special instructions involving [ursa](https://github.com/Medium/ursa) on Windows will need to be observed.
+
+For a basic command implementation (with a recommended "about" command)
+
+    cd plugins
+    git clone https://github.com/NoMoreSugar/iwritelists-basicbot
+    cd iwritelists-basicbot
+    npm install
 
 ## Credits
 
