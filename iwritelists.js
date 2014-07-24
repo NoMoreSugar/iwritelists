@@ -86,12 +86,6 @@ eventHandler.registerCommand = function(commandName, callback){
   commands[commandName]=callback;
 }
 
-L.debug("Preparing twimod");
-var twimod = {};
-twimod.eventHandler = eventHandler;
-twimod.bot = bot;
-twimod.steam = Steam;
-
 L.debug("Initializing default events");
 
 commands.unknown = function(message){
@@ -130,6 +124,30 @@ events.defaultSentryHandler = function(sentry){
 }
 eventHandler.registerEvent("sentry", events.defaultSentryHandler);
 
+events.defaultLogonHandler = function(){
+  bot.setPersonaState(Steam.EPersonaState.Online);
+
+  L.debug("Preparing twimod (node-steam API is ready)");
+  var twimod = {};
+  twimod.eventHandler = eventHandler;
+  twimod.bot = bot;
+  twimod.steam = Steam;
+
+  L.debug("Reading ./plugins/");
+  fs.readdirSync("./plugins/").forEach(function(v,k){
+    L.debug("Loading plugin " + v);
+    try {
+      require("./plugins/" + v)(twimod);
+    }
+    catch(e){
+      L.prettyStackTrace({e: e, msg: "Plugin " + v + "could not be injected."})
+    }
+  });
+
+  L.debug("Done loading plugins");
+}
+eventHandler.registerEvent("loggedOn", events.defaultLogonHandler);
+
 function messageFactory(id, msg, isGroupMessage, groupID){
   var message = {};
   message.fromID = id;
@@ -152,18 +170,6 @@ function messageFactory(id, msg, isGroupMessage, groupID){
 
   return message;
 }
-
-L.debug("Reading ./plugins/");
-fs.readdirSync("./plugins/").forEach(function(v,k){
-  L.debug("Loading plugin " + v);
-  try {
-    require("./plugins/" + v)(twimod);
-  }
-  catch(e){
-    L.prettyStackTrace({e: e, msg: "Plugin " + v + "could not be injected."})
-  }
-});
-L.debug("Done loading plugins");
 
 L.debug("Logging on");
 try {
