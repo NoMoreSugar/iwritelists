@@ -27,3 +27,4 @@ node_modules
 settings.json
 iwritelists.log
 .sentryfile
+plugins/*

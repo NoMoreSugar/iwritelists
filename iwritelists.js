@@ -10,6 +10,7 @@ if( ! fs.existsSync("settings.json") ){
 }
 
 var login = {};
+var twimod = {};
 
 // examine arguments
 process.argv.forEach(function(v,k){
@@ -128,13 +129,13 @@ events.defaultLogonHandler = function(){
   bot.setPersonaState(Steam.EPersonaState.Online);
 
   L.debug("Preparing twimod (node-steam API is ready)");
-  var twimod = {};
   twimod.eventHandler = eventHandler;
   twimod.bot = bot;
   twimod.steam = Steam;
 
   L.debug("Reading ./plugins/");
   fs.readdirSync("./plugins/").forEach(function(v,k){
+    if( ! fs.lstatSync("./plugins/" + v).isDirectory()) return;
     L.debug("Loading plugin " + v);
     try {
       require("./plugins/" + v)(twimod);
@@ -155,6 +156,7 @@ function messageFactory(id, msg, isGroupMessage, groupID){
   message.split = message.message.split(" ");
   message.command = message.split[0];
   message.args = message.split.slice(1);
+  message.twimod = twimod;
 
   if( isGroupMessage ) message.replyTo = groupID;
   else message.replyTo = id;
