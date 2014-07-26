@@ -84,7 +84,7 @@ eventHandler.getEvent = function(eventName){
 var commands = {};
 
 eventHandler.registerCommand = function(commandName, callback){
-  commands[commandName]=callback;
+  commands[commandName.toLowerCase()]=callback;
 }
 
 L.debug("Initializing default events");
