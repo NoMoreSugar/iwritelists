@@ -3,6 +3,7 @@ var fs = require("fs");
 var Steam = require("steam");
 
 var saveSentry=true;
+var dryRun=false;
 
 if( ! fs.existsSync("settings.json") ){
   L.fatal("No settings.json file found! Follow settings.json.example to create your own.");
@@ -26,6 +27,11 @@ process.argv.forEach(function(v,k){
   else if( v == "-n" || v == "--no-sentry" ){
     L.debug("Not saving sentry-file.");
     saveSentry=false;
+  }
+  else if( v == "-t" || v == "--test"){
+    L.debugLogging = true;
+    dryRun=true;
+    L.debug("Running in test/dry-run mode.");
   }
 });
 
@@ -177,6 +183,11 @@ fs.readdirSync("./plugins/").forEach(function(v,k){
   }
 });
 L.debug("Done loading plugins");
+
+if( dryRun ){
+  L.info("IWriteLists (and any attached plugins) seem to be working normally (unless otherwise stated above.)");
+  process.exit(0);
+}
 
 L.debug("Logging on");
 try {
