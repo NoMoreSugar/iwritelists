@@ -94,7 +94,7 @@ commands.unknown = function(message){
 }
 
 function commandHandler(message){
-  if( commands[message.command] ) commands[message.command](message);
+  if( commands[message.command.toLowerCase()] ) commands[message.command.toLowerCase()](message);
   else commands["unknown"](message);
 }
 
