@@ -61,7 +61,7 @@ var eventHandler = {};
 var events = {};
 
 eventHandler.registerEvent = function(eventName, callback){
-  if( eventName == "message" || eventName == "friendMsg" || eventName == "chatMsg" || eventName == "sentry" ){
+  if( (eventName == "message" && events.message) || (eventName == "friendMsg" && events.friendMsg) || eventName == ("chatMsg" && events.chatMsg) || (eventName == "sentry" && events.sentry) ){
     L.warn("Overriding the " + eventName + " event may cause issues if not handled correctly!!");
   }
   events[eventName]=callback;
