@@ -12,6 +12,26 @@ if( ! fs.existsSync("settings.json") ){
 
 var login = {};
 var twimod = {};
+var twidb = {};
+
+twidb.write = function(key, keyValue){
+  var prevKey = JSON.parse(fs.readFileSync("twi.db"));
+  prevKey[key]=keyValue;
+  return fs.writeFileSync("twi.db", JSON.stringify(prevKey));
+}
+twidb.read = function(key){
+
+  if( ! fs.existsSync("twi.db") ){
+    fs.writeFileSync("twi.db", JSON.stringify({}));
+  }
+
+  var db = JSON.parse(fs.readFileSync("twi.db"));
+
+  if(! db[key] ) return {};
+  else return db[key];
+}
+
+twimod.twidb = twidb;
 
 // examine arguments
 process.argv.forEach(function(v,k){
