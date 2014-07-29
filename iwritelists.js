@@ -156,9 +156,7 @@ events.defaultSentryHandler = function(sentry){
     L.debug("Recieved sentry-file event, but not saving sentry-file.");
   }
 }
-eventHandler.registerEvent("sentry", events.defaultSentryHandler);
-
-eventHandler.registerEvent("loggedOn", events.defaultLogonHandler);
+eventHandler.registerEvent("sentry", events.defaultSentryHandler)
 
 function messageFactory(id, msg, isGroupMessage, groupID){
   var message = {};
