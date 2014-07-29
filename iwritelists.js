@@ -151,9 +151,6 @@ events.defaultSentryHandler = function(sentry){
 }
 eventHandler.registerEvent("sentry", events.defaultSentryHandler);
 
-events.defaultLogonHandler = function(){
-  bot.setPersonaState(Steam.EPersonaState.Online);
-}
 eventHandler.registerEvent("loggedOn", events.defaultLogonHandler);
 
 function messageFactory(id, msg, isGroupMessage, groupID){
