@@ -5,10 +5,7 @@ var Steam = require("steam");
 var saveSentry=true;
 var dryRun=false;
 
-if( ! fs.existsSync("settings.json") ){
-  L.fatal("No settings.json file found! Follow settings.json.example to create your own.");
-  process.exit(1);
-}
+var errors=0;
 
 var login = {};
 var twimod = {};
@@ -55,28 +52,38 @@ process.argv.forEach(function(v,k){
   }
 });
 
-L.debug("Parsing settings");
-try {
-  settings = JSON.parse(fs.readFileSync("settings.json"));
-} catch(e){
-  L.prettyStackTrace({e: e, msg: "Could not read/parse settings.json", isFatal: true});
-}
+if( ! dryRun ){
+  if( ! fs.existsSync("settings.json") ){
+    L.fatal("No settings.json file found! Follow settings.json.example to create your own.");
+    process.exit(1);
+  }
 
-if( ! settings.accountName || ! settings.password ){
-  L.fatal("There must be a 'accountName' and 'password' property in settings.json");
-  process.exit(1);
-}
+  L.debug("Parsing settings");
+  try {
+    settings = JSON.parse(fs.readFileSync("settings.json"));
+  } catch(e){
+    L.prettyStackTrace({e: e, msg: "Could not read/parse settings.json", isFatal: true});
+  }
 
-L.debug("Reading account name/password");
-login.accountName = settings.accountName;
-login.password = settings.password;
+  if( ! settings.accountName || ! settings.password ){
+    L.fatal("There must be a 'accountName' and 'password' property in settings.json");
+    process.exit(1);
+  }
 
-if( ! fs.existsSync(".sentryfile") ){
-  L.warn("Sentry file doesn't exist. If SteamGuard is enabled you will need to specify your one-time use key with -a.");
+  L.debug("Reading account name/password");
+  login.accountName = settings.accountName;
+  login.password = settings.password;
+
+  if( ! fs.existsSync(".sentryfile") ){
+    L.warn("Sentry file doesn't exist. If SteamGuard is enabled you will need to specify your one-time use key with -a.");
+  }
+  else {
+    L.debug("Reading .sentryfile.");
+    login.shaSentryfile = fs.readFileSync(".sentryfile");
+  }
 }
 else {
-  L.debug("Reading .sentryfile.");
-  login.shaSentryfile = fs.readFileSync(".sentryfile");
+  L.debug("Skipping configuration as we're running in dry-run mode.");
 }
 
 bot = new Steam.SteamClient();
@@ -196,14 +203,20 @@ fs.readdirSync("./plugins/").forEach(function(v,k){
     require("./plugins/" + v)(twimod);
   }
   catch(e){
-    L.prettyStackTrace({e: e, msg: "Plugin " + v + "could not be injected."})
+    L.prettyStackTrace({e: e, msg: "Plugin " + v + " could not be injected."});
+    errors++;
   }
 });
 L.debug("Done loading plugins");
 
 if( dryRun ){
-  L.info("IWriteLists (and any attached plugins) seem to be working normally (unless otherwise stated above.)");
-  process.exit(0);
+  if( errors == 0 ){
+    L.info("IWriteLists (and any attached plugins) seem to be working normally (unless otherwise stated above).");
+  }
+  else {
+    L.info(errors + " errors occured while starting IWriteLists.");
+  }
+  process.exit(errors);
 }
 
 L.debug("Logging on");

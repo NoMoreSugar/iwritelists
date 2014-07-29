@@ -8,5 +8,9 @@
   },
   "engines": {
     "node": "0.10.x"
+  },
+  "scripts": {
+    "start": "node iwritelists.js",
+    "test": "node iwritelists.js -d -t"
   }
 }
