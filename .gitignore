@@ -28,3 +28,4 @@ settings.json
 iwritelists.log
 .sentryfile
 plugins/*
+twi.db
