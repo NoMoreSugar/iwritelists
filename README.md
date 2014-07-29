@@ -46,7 +46,7 @@ Plugins are ordinary Node modules. They have a package.json, etc., and are place
 iwritelists, a Valve Steam client autonomous bot framework based on node-steam
 
 Copyright (c) 2013-14 [No More Sugar](http://nomoresugar.github.io), [tdlive aw'sum](http://tdlive.me/), and
-[contributors](https://github.com/NoMoreSugar/iwritelistsgraphs/contributors).
+[contributors](https://github.com/NoMoreSugar/iwritelists/graphs/contributors).
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
