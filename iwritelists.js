@@ -235,3 +235,7 @@ try {
 } catch(e){
   L.prettyStackTrace({e: e, msg: "Could not log in", isFatal: true});
 }
+
+if( dryRun ){
+  setTimeout(function(){ bot.logOff(); }, 10000);
+}
