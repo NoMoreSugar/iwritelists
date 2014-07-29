@@ -1,4 +1,4 @@
-# iwritelists
+# iwritelists [![Build Status](https://travis-ci.org/NoMoreSugar/iwritelists.svg?branch=master)](https://travis-ci.org/NoMoreSugar/iwritelists)
 
 A modular Steam chat bot framework based on node-steam.
 
@@ -25,20 +25,20 @@ To install a basic command implementation (with a recommended "about" command):
 Plugins are ordinary Node modules. They have a package.json, etc., and are placed in their own directory in ./plugins/.
 
     var init = function(twimod){
-       
+
        eh = twimod.eventHandler;
-       
+
        // register some kind of event
        eh.registerEvent("loggedOn", function(){
             console.log("event fired!!");
        });
-       
+
        // now a command
        eh.registerCommand("myamazingcommand", function(msg){
             msg.reply("2amazing4u");
        });
     }
-    
+
     module.exports=init;
 
 ## Credits
