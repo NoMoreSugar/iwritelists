@@ -11,6 +11,6 @@
   },
   "scripts": {
     "start": "node iwritelists.js",
-    "test": "node iwritelists.js -d -t"
+    "test": "node iwritelists.js -d -t -n"
   }
 }
