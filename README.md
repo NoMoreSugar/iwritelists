@@ -18,7 +18,14 @@ To install a basic command implementation (with a recommended "about" command):
     cd plugins
     git clone https://github.com/NoMoreSugar/iwritelists-basicbot
     cd iwritelists-basicbot
-    npm install
+
+## settings.json
+
+settings.json is the configuration for IWriteLists. You can use settings.json.example to create a new settings.json.
+The most important properties are the "username" and "password" fields, which are necessary to actually log on.
+
+You can also set these fields with environment variables IWRITELISTS_STEAM_USER and IWRITELISTS_STEAM_PASS (although
+it isn't at all recommended).
 
 ## Writing Plugins
 

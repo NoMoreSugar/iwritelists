@@ -52,6 +52,14 @@ process.argv.forEach(function(v,k){
   }
 });
 
+L.debug("Testing for configuration in environment variables.");
+
+if( process.env.IWRITELISTS_STEAM_USER && process.env.IWRITELISTS_STEAM_PASS ){
+  L.debug("Importing environment variables");
+  login.accountName=process.env.IWRITELISTS_STEAM_USER;
+  login.password=process.env.IWRITELISTS_STEAM_PASS;
+}
+
 if( ! dryRun ){
   if( ! fs.existsSync("settings.json") ){
     L.fatal("No settings.json file found! Follow settings.json.example to create your own.");
@@ -214,7 +222,11 @@ if( dryRun ){
   else {
     L.info(errors + " errors occured while starting IWriteLists.");
   }
-  process.exit(errors);
+
+  if( ! login.accountName && ! login.password ){
+    L.debug("I don't have any logon info so I won't continue.");
+    process.exit(errors);
+  }
 }
 
 L.debug("Logging on");

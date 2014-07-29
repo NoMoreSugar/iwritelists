@@ -1,5 +1,10 @@
 language: node_js
 node_js:
-  - "0.10"
+- '0.10'
 before_script:
-  - bash cloneTestModules.sh
+- bash cloneTestModules.sh
+env:
+  global:
+  - secure: CTLLoFW+fJO4mlKKLC+cg/RyD92FDYBDB7ckbfVpAW2a4e40xRg0wTn9hrXwtjfpbxvJOVBuDmm5N5rswJqFEP9WNlUYotRulft0JK/XWbw0nthObRqlBYKGdKjL4AkOU+Uw5uLRnOGscavpcIh1S/29/7lnYsdCdmuvy55co/E=
+  - secure: O9uJqZ6ELs6x3mlXgqjGG3D2wOi9Q0u0y6BYp+VzGa3eJS5qXRjtxan9Bh5zcpSR9ZinkWPZ2VXD6trA2clhEKo3vOzeRQ5ZcUeaZ7vbdaX9OO+c+vPlBWlbqpfTQ+3aSeoyfrEqp2qd5ikZS5dQ5ZoqwG9rfqGqRCa9Zq7ALzI=
+  - secure: G3XO5anXoWbjuJ4llfyXCW1gbcjgh406nPrfSNAR36684En5um/tP5cocpSb1JaW5yJLwJ2YxFxCzavQML0Qc7CsaikcQ3WPrIqI+UHeCsEY5jnVFCZSEDRLzDSnYNDel4Zv+8WkuD6aRygYEOhu0XfQ/NeZUeDTHASTin5hkZ4=
