@@ -52,6 +52,11 @@ process.argv.forEach(function(v,k){
   }
 });
 
+if( fs.existsSync("steam.srv") ){
+  L.debug("Loading Steam auth servers");
+  Steam.servers = JSON.parse(fs.readFileSync("steam.srv"));
+}
+
 L.debug("Testing for configuration in environment variables.");
 
 if( process.env.IWRITELISTS_STEAM_USER && process.env.IWRITELISTS_STEAM_PASS ){
@@ -102,7 +107,7 @@ var eventHandler = {};
 var events = {};
 
 eventHandler.registerEvent = function(eventName, callback){
-  if( (eventName == "message" && events.message) || (eventName == "friendMsg" && events.friendMsg) || eventName == ("chatMsg" && events.chatMsg) || (eventName == "sentry" && events.sentry) ){
+  if( (eventName == "message" && events.message) || (eventName == "friendMsg" && events.friendMsg) || eventName == ("chatMsg" && events.chatMsg) || (eventName == "sentry" && events.sentry) || (eventName == "servers" && events.servers) ){
     L.warn("Overriding the " + eventName + " event may cause issues if not handled correctly!!");
   }
   events[eventName]=callback;
@@ -164,7 +169,13 @@ events.defaultSentryHandler = function(sentry){
     L.debug("Recieved sentry-file event, but not saving sentry-file.");
   }
 }
-eventHandler.registerEvent("sentry", events.defaultSentryHandler)
+eventHandler.registerEvent("sentry", events.defaultSentryHandler);
+
+events.defaultServersHandler = function(servers){
+  fs.writeFileSync("steam.srv", JSON.stringify(servers));
+  L.debug("Saved server list.");
+}
+eventHandler.registerEvent("servers", events.defaultServersHandler);
 
 function messageFactory(id, msg, isGroupMessage, groupID){
   var message = {};
