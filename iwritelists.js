@@ -9,6 +9,9 @@ var errors=0;
 
 var login = {};
 var twimod = {};
+
+twimod.version = JSON.parse(fs.readFileSync("package.json"))["version"] + " (git-master-" + fs.readFileSync("./.git/refs/heads/master").slice(0,5) + ")";
+
 var twidb = {};
 
 twidb.write = function(key, keyValue){
