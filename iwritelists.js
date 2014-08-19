@@ -78,7 +78,8 @@ if( ! dryRun ){
   try {
     settings = JSON.parse(fs.readFileSync("settings.json"));
   } catch(e){
-    L.prettyStackTrace({e: e, msg: "Could not read/parse settings.json", isFatal: true});
+    L.warn("Could not parse settings.json");
+    L.fatal(e.stack);
   }
 
   if( ! settings.accountName || ! settings.password ){
@@ -223,7 +224,8 @@ fs.readdirSync("./plugins/").forEach(function(v,k){
     require("./plugins/" + v)(twimod);
   }
   catch(e){
-    L.prettyStackTrace({e: e, msg: "Plugin " + v + " could not be injected."});
+    L.warn("Plugin " + v + " could not be injected.");
+    L.warn(e.stack);
     errors++;
   }
 });
@@ -244,11 +246,7 @@ if( dryRun ){
 }
 
 L.debug("Logging on");
-try {
-  bot.logOn(login);
-} catch(e){
-  L.prettyStackTrace({e: e, msg: "Could not log in", isFatal: true});
-}
+bot.logOn(login);
 
 if( dryRun ){
   setTimeout(function(){ bot.logOff(); }, 10000);
