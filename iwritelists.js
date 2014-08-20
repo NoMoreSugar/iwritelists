@@ -282,6 +282,10 @@ if( ! fs.existsSync("./plugins/") ){
   fs.mkdirSync("./plugins/");
 }
 
+if( ! fs.existsSync("./plugincfg/") ){
+  fs.mkdirSync("./plugincfg/");
+}
+
 fs.readdirSync("./plugins/").forEach(function(v,k){
   if( ! fs.lstatSync("./plugins/" + v).isDirectory()) return;
   L.debug("Loading plugin " + v);

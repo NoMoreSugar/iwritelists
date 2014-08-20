@@ -32,3 +32,4 @@ plugins/*
 twi.db
 steam.srv
 permissions.json
+plugincfg
