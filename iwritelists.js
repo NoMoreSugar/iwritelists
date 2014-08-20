@@ -33,6 +33,68 @@ twidb.read = function(key){
 
 twimod.twidb = twidb;
 
+function allStrings(strs){
+  var all=true;
+  strs.forEach(function(v){
+    if( ! v instanceof String ) all=false;
+  });
+  return all;
+}
+
+twimod.P = {};
+
+// is user in group?
+twimod.P.is = function(id, what){
+
+  if( ! allStrings([id,what]) ) return false;
+
+  if( what == "user" ) return true; // maybe will return false in the future if the user is banned
+
+  if( fs.existsSync("permissions.json") ){
+    var perms = JSON.parse(fs.readFileSync("permissions.json"));
+    if( ! perms[what] || !(perms[what] instanceof Array) ){
+      return false; // key doesn't exist
+    }
+
+    var isRank=false;
+
+    perms[what].forEach(function(v){
+        if(v == id) isRank=true;
+    });
+
+    return isRank;
+  }
+  else {
+    return false;
+  }
+}
+
+// add user to group
+twimod.P.add = function(id, to){
+  if( ! allStrings([id,to]) ) return false;
+
+  if( ! fs.existsSync("permissions.json") ) return false;
+  if( twimod.P.is(id, to) ) return true;
+
+  var perms = JSON.parse(fs.readFileSync("permissions.json"));
+  if( ! perms[to] ) perms[to] = [];
+  perms[to].push(id);
+  fs.writeFileSync("permissions.json", JSON.stringify(perms));
+  return true;
+}
+
+// remove user from group
+twimod.P.remove = function(id, from){
+  if( ! allStrings([id, from])) return false;
+
+  if( ! fs.existsSync("permissions.json")) return false;
+  if( ! twimod.P.is(id, from) ) return true;
+
+  var perms = JSON.parse(fs.readFileSync("permissions.json"));
+  perms[from].splice(perms[from].indexOf(id), 1);
+  fs.writeFileSync("permissions.json", JSON.stringify(perms));
+}
+
 // examine arguments
 process.argv.forEach(function(v,k){
   // debug mode (-d)
