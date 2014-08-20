@@ -11,7 +11,8 @@ It's really simple, I promise!
     npm install
 
 
-Note that any special instructions involving [ursa](https://github.com/Medium/ursa) on Windows will need to be observed.
+*Note* that any special instructions involving [ursa](https://github.com/Medium/ursa) on Windows will need to be
+observed.
 
 To install a basic command implementation (with a recommended "about" command):
 
@@ -19,13 +20,29 @@ To install a basic command implementation (with a recommended "about" command):
     git clone https://github.com/NoMoreSugar/iwritelists-basicbot
     cd iwritelists-basicbot
 
-## settings.json
+### settings.json
 
 settings.json is the configuration for IWriteLists. You can use settings.json.example to create a new settings.json.
 The most important properties are the "username" and "password" fields, which are necessary to actually log on.
 
-You can also set these fields with environment variables IWRITELISTS_STEAM_USER and IWRITELISTS_STEAM_PASS (although
-it isn't at all recommended).
+You can also set these fields with environment variables ``IWRITELISTS_STEAM_USER`` and ``IWRITELISTS_STEAM_PASS``
+(although it isn't at all recommended).
+
+### Permissions
+
+To restrict access of (mainly) administrative commands, IWriteLists has a built-in permissions system. This data is
+stored in ``permissions.json``. It is recommended that you set these up once you install IWriteLists.
+
+The default (and usually expected) ranks are:
+
+- ``superadmin``: Has access to literally everything. This should be limited to the bot owner ONLY.
+- ``admin``: Has access to most things, excluding certain administration functions such as modifying permissions or
+starting/stopping the bot.
+- ``moderator``: Has access to moderation functions only (ban, etc.)
+- ``user``: Automatically set by IWriteLists to any user the bot is friends with. This should be limited to commands
+that don't affect other user(s).
+
+If the permissions.json file is not set up, any non-user-level commands will be rejected.
 
 ## Writing Plugins
 
