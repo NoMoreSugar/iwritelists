@@ -42,6 +42,9 @@ starting/stopping the bot.
 - ``user``: Automatically set by IWriteLists to any user the bot is friends with. This should be limited to commands
 that don't affect other user(s).
 
+*Note* that permissions aren't heritable. You will need to add users to the superadmin, admin and moderator group in
+order for a superadmin to have access to *all* commands.
+
 If the permissions.json file is not set up, any non-user-level commands will be rejected.
 
 ## Writing Plugins
