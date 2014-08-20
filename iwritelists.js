@@ -272,6 +272,7 @@ twimod.eventHandler = eventHandler;
 twimod.bot = bot;
 twimod.steam = Steam;
 twimod.L = L;
+twimod.messageFactory = messageFactory;
 
 L.debug("Reading ./plugins/");
 
