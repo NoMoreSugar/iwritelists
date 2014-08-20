@@ -12,5 +12,9 @@
   "scripts": {
     "start": "node iwritelists.js",
     "test": "node iwritelists.js -d -t -n"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/NoMoreSugar/IWriteLists.git"
   }
 }
