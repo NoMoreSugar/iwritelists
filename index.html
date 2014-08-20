@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>IWriteLists by NoMoreSugar</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>IWriteLists</h1>
+        <p>a Valve Steam client autonomous bot framework based on node-steam</p>
+
+        <p class="view"><a href="https://github.com/NoMoreSugar/iwritelists">View the Project on GitHub <small>NoMoreSugar/iwritelists</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/NoMoreSugar/iwritelists/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/NoMoreSugar/iwritelists/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/NoMoreSugar/iwritelists">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>Current build status: <a href="https://travis-ci.org/NoMoreSugar/iwritelists"><img src="https://travis-ci.org/NoMoreSugar/iwritelists.svg?branch=master" alt="Build Status"></a></p>
+
+<h2>
+<a name="installing" class="anchor" href="#installing"><span class="octicon octicon-link"></span></a>Installing</h2>
+
+<p>It's really simple, I promise!</p>
+
+<pre><code>git clone https://github.com/NoMoreSugar/iwritelists
+cd iwritelists
+npm install
+</code></pre>
+
+<p><em>Note</em> that any special instructions involving <a href="https://github.com/Medium/ursa">ursa</a> on Windows will need to be
+observed.</p>
+
+<p>To install a basic command implementation (with a recommended "about" command):</p>
+
+<pre><code>cd plugins
+git clone https://github.com/NoMoreSugar/iwritelists-basicbot
+cd iwritelists-basicbot
+</code></pre>
+
+<h3>
+<a name="settingsjson" class="anchor" href="#settingsjson"><span class="octicon octicon-link"></span></a>settings.json</h3>
+
+<p>settings.json is the configuration for IWriteLists. You can use settings.json.example to create a new settings.json.
+The most important properties are the "username" and "password" fields, which are necessary to actually log on.</p>
+
+<p>You can also set these fields with environment variables <code>IWRITELISTS_STEAM_USER</code> and <code>IWRITELISTS_STEAM_PASS</code>
+(although it isn't at all recommended).</p>
+
+<h3>
+<a name="permissions" class="anchor" href="#permissions"><span class="octicon octicon-link"></span></a>Permissions</h3>
+
+<p>To restrict access of (mainly) administrative commands, IWriteLists has a built-in permissions system. This data is
+stored in <code>permissions.json</code>. It is recommended that you set these up once you install IWriteLists.</p>
+
+<p>The default (and usually expected) ranks are:</p>
+
+<ul>
+<li>
+<code>superadmin</code>: Has access to literally everything. This should be limited to the bot owner ONLY.</li>
+<li>
+<code>admin</code>: Has access to most things, excluding certain administration functions such as modifying permissions or
+starting/stopping the bot.</li>
+<li>
+<code>moderator</code>: Has access to moderation functions only (ban, etc.)</li>
+<li>
+<code>user</code>: Automatically set by IWriteLists to any user the bot is friends with. This should be limited to commands
+that don't affect other user(s).</li>
+</ul><p><em>Note</em> that permissions aren't heritable. You will need to add users to the superadmin, admin and moderator group in
+order for a superadmin to have access to <em>all</em> commands.</p>
+
+<p>If the permissions.json file is not set up, any non-user-level commands will be rejected.</p>
+
+<h2>
+<a name="writing-plugins" class="anchor" href="#writing-plugins"><span class="octicon octicon-link"></span></a>Writing Plugins</h2>
+
+<p>Plugins are ordinary Node modules. They have a package.json, etc., and are placed in their own directory in ./plugins/.</p>
+
+<pre><code>var init = function(twimod){
+
+   eh = twimod.eventHandler;
+
+   // register some kind of event
+   eh.registerEvent("loggedOn", function(){
+        console.log("event fired!!");
+   });
+
+   // now a command
+   eh.registerCommand("myamazingcommand", function(msg){
+        msg.reply("2amazing4u");
+   });
+}
+
+module.exports=init;
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/NoMoreSugar">NoMoreSugar</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
