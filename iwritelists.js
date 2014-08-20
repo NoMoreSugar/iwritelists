@@ -246,6 +246,7 @@ eventHandler.registerEvent("servers", events.defaultServersHandler);
 function messageFactory(id, msg, isGroupMessage, groupID){
   var message = {};
   message.fromID = id;
+  message.fromPlayerName = bot.users[id].playerName
   message.message = msg;
   message.split = message.message.split(" ");
   message.command = message.split[0];
