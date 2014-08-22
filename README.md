@@ -4,12 +4,14 @@ A modular Steam chat bot framework based on node-steam.
 
 ## Installing
 
-It's really simple, I promise!
+Download [Node.js](http://nodejs.org/).
 
-    git clone https://github.com/NoMoreSugar/iwritelists
+After that, it's really simple, I promise!
+
+    git clone https://github.com/NoMoreSugar/iwritelists #or download the .zip
     cd iwritelists
     npm install
-
+    node iwritelists.js #or npm start if you know what you're doing
 
 *Note* that any special instructions involving [ursa](https://github.com/Medium/ursa) on Windows will need to be
 observed.
@@ -18,7 +20,8 @@ To install a basic command implementation (with a recommended "about" command):
 
     cd plugins
     git clone https://github.com/NoMoreSugar/iwritelists-basicbot
-    cd iwritelists-basicbot
+
+P.S. - instead of using Git you can just download the .zip from NoMoreSugar/iwritelists-basicbot.
 
 ### settings.json
 
@@ -27,6 +30,11 @@ The most important properties are the "username" and "password" fields, which ar
 
 You can also set these fields with environment variables ``IWRITELISTS_STEAM_USER`` and ``IWRITELISTS_STEAM_PASS``
 (although it isn't at all recommended).
+
+If you haven't run IWriteLists before and have SteamGuard enabled on the account, you'll need to specify the
+SteamGuard code like
+
+    node iwritelists.js -a 8372
 
 ### Permissions
 
