@@ -9,8 +9,11 @@ var errors=0;
 
 var login = {};
 var twimod = {};
+loadedPlugins = [];
 
 twimod.version = JSON.parse(fs.readFileSync("package.json"))["version"] + " (git-master-" + fs.readFileSync("./.git/refs/heads/master").slice(0,5) + ")";
+
+L.info("IWriteLists " + twimod.version + " starting...");
 
 var twidb = {};
 
@@ -286,19 +289,69 @@ if( ! fs.existsSync("./plugincfg/") ){
   fs.mkdirSync("./plugincfg/");
 }
 
+var getPkgName=function(v, loadedOK){
+  if( fs.existsSync("./plugins/" + v + "/package.json") ){
+    var pk=JSON.parse(fs.readFileSync("./plugins/" + v + "/package.json"));
+    name=pk.name || "unknown package";
+  }
+  else {
+    name="unknown package";
+  }
+
+  if( ! loadedOK) name+="*";
+  loadedPlugins.push(name);
+}
+
+twimod.plugins = {};
+twimod.plugins.isLoaded = function(plg){
+  var isLoaded=false;
+  loadedPlugins.forEach(function(v){
+    if( plg == v ) isLoaded=true;
+  });
+  return isLoaded;
+};
+twimod.plugins.isNotLoaded = function(plg){
+  return !twimod.plugins.isLoaded(plg);
+}
+twimod.plugins.constructors = [];
+
 fs.readdirSync("./plugins/").forEach(function(v,k){
   if( ! fs.lstatSync("./plugins/" + v).isDirectory()) return;
-  L.debug("Loading plugin " + v);
+  L.debug("Loading plugin " + v + " into constructor list.");
+  var loadedOK;
   try {
-    require("./plugins/" + v)(twimod);
+    twimod.plugins.constructors.push({
+      name: v,
+      constructor: require("./plugins/" + v)
+    });
   }
   catch(e){
-    L.warn("Plugin " + v + " could not be injected.");
+    L.warn("Plugin " + v + " could not be loaded into constructor list.");
     L.warn(e.stack);
     errors++;
+    loadedOK=true;
   }
 });
-L.debug("Done loading plugins");
+L.debug("Done loading plugins into constructor list.");
+
+twimod.plugins.loaded = loadedPlugins;
+
+L.debug("Constructing plugins");
+twimod.plugins.constructors.forEach(function(v,k){
+  L.debug("Constructing plugin " + v.name);
+  var loadedOK=true;
+  try {
+    v.constructor(twimod);
+  }
+  catch(e){
+    L.warn("Plugin" + v + " could not be constructed.");
+    L.warn(e.stack);
+    errors++;
+    loadedOK=false;
+  }
+  getPkgName(v, loadedOK);
+});
+L.debug("Done constructing plugins.");
 
 if( dryRun ){
   if( errors == 0 ){
