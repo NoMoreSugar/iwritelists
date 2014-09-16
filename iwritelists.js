@@ -344,8 +344,8 @@ twimod.plugins.constructors.forEach(function(v,k){
     v.constructor(twimod);
   }
   catch(e){
-    L.warn("Plugin" + v + " could not be constructed.");
-    L.warn(e.stack);
+    L.warn("Plugin " + v.name + " could not be constructed. (" + e + ")");
+    L.debug(e.stack);
     errors++;
     loadedOK=false;
   }
