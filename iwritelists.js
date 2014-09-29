@@ -176,16 +176,52 @@ var eventHandler = {};
 var events = {};
 
 eventHandler.registerEvent = function(eventName, callback){
+  L.debug("WARNING! eventHandler.registerEvent() is deprecated and may be removed in a further release. Please use eventHandler.on() instead.");
   if( (eventName == "message" && events.message) || (eventName == "friendMsg" && events.friendMsg) || eventName == ("chatMsg" && events.chatMsg) || (eventName == "sentry" && events.sentry) || (eventName == "servers" && events.servers) ){
-    L.warn("Overriding the " + eventName + " event may cause issues if not handled correctly!!");
+    L.debug("WARNING! Overriding the " + eventName + " event may cause issues if not handled correctly!! Please use .on() instead if you wish to override default events.");
   }
-  events[eventName]=callback;
-  bot.removeAllListeners(eventName);
-  bot.on(eventName, events[eventName]);
+  eventHandler.on({from: "deprecated", name: eventName, callback: callback});
 }
 
-eventHandler.removeEvent = function(eventName){
-  bot.removeListener(eventName);
+eventHandler.on = function(n,c){
+  var from,name,callback;
+  if( n instanceof String ){
+    L.debug("WARNING! Registering events anonymously is highly discouraged. Please use an EventObject instead.");
+    from="anonymous_" + new Date().getTime();
+    name=n;
+    callback=c || function(){};
+  }
+  else {
+    if( ! n.from || ! n.name || ! n.callback ){
+      L.debug("WARNING! A plugin is trying to inject an invalid event. Discarding.");
+      return false;
+    }
+    from=n.from;
+    name=n.name;
+    callback=n.callback;
+  }
+
+  if( ! events[from] ) events[from]=callback;
+  events[from][name]=callback;
+  try {
+    bot.on(name, callback);
+  }
+  catch(e){
+    L.warn("A plugin (" + from + ") unsuccessfully tried to register an event (" + e + ")");
+    L.debug(e.stack);
+  }
+}
+
+eventHandler.removeEvent = function(callback){
+  L.debug("WARNING! eventHandler.removeEvent() is deprecated and may be removed in a further release. Please use eventHandler.removeListener() instead.");
+  bot.removeListener(callback);
+}
+
+eventHandler.removeListener = function(from, eventName){
+  if( ! allStrings([from, eventName]) || ! events[from][eventName] ){
+    L.debug("WARNING! A plugin unsuccessfully tried to remove a listener that doesn't exist.");
+  }
+  bot.removeListener(eventName, events[from][eventName]);
 }
 
 eventHandler.doOnce = function(eventName, callback){
@@ -200,6 +236,12 @@ var commands = {};
 
 eventHandler.registerCommand = function(commandName, callback){
   commands[commandName.toLowerCase()]=callback;
+}
+
+eventHandler.unbindDefaultEvent = function(fo){
+  var fq = "default" + fo.splice(0,1).toUpperCase() + fo.splice(1) + "Handler";
+  if( events[fq] ) return bot.removeListener(events[fq]);
+  else return false;
 }
 
 L.debug("Initializing default events");
@@ -221,13 +263,13 @@ events.defaultFriendMessageHandler = function(id, msg){
   L.info(bot.users[id].playerName + " (" + id + "): " + msg);
   commandHandler(messageFactory(id, msg, false));
 }
-eventHandler.registerEvent("friendMsg", events.defaultFriendMessageHandler);
+eventHandler.on({ from: "twimod (native code)", name: "friendMsg", callback: events.defaultFriendMessageHandler });
 
 events.defaultGroupMessageHandler = function(id, msg){
   if(! msg[0] == "!") return;
   commandHandler(messageFactory(id, msg.slice(1), true, groupID));
 }
-eventHandler.registerEvent("chatMsg", events.defaultGroupMessageHandler);
+eventHandler.on({ from: "twimod (native code)", name: "chatMsg", callback: events.defaultGroupMessageHandler });
 
 events.defaultSentryHandler = function(sentry){
   if( saveSentry ){
@@ -238,13 +280,13 @@ events.defaultSentryHandler = function(sentry){
     L.debug("Recieved sentry-file event, but not saving sentry-file.");
   }
 }
-eventHandler.registerEvent("sentry", events.defaultSentryHandler);
+eventHandler.on({ from: "twimod (native code)", name: "sentry", callback: events.defaultSentryHandler });
 
 events.defaultServersHandler = function(servers){
   fs.writeFileSync("steam.srv", JSON.stringify(servers));
   L.debug("Saved server list.");
 }
-eventHandler.registerEvent("servers", events.defaultServersHandler);
+eventHandler.on({ from: "twimod (native code)", name: "servers", callback: events.defaultServersHandler });
 
 function messageFactory(id, msg, isGroupMessage, groupID){
   var message = {};
@@ -332,7 +374,7 @@ fs.readdirSync("./plugins/").forEach(function(v,k){
     loadedOK=true;
   }
 });
-L.debug("Done loading plugins into constructor list.");
+L.debug("Done loading plugins into constructor list (" + errors + " errors).");
 
 twimod.plugins.loaded = loadedPlugins;
 
@@ -351,7 +393,7 @@ twimod.plugins.constructors.forEach(function(v,k){
   }
   getPkgName(v, loadedOK);
 });
-L.debug("Done constructing plugins.");
+L.debug("Done constructing plugins. (" + errors + " errors).");
 
 if( dryRun ){
   if( errors == 0 ){
