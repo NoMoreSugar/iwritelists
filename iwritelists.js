@@ -185,7 +185,7 @@ eventHandler.registerEvent = function(eventName, callback){
 
 eventHandler.on = function(n,c){
   var from,name,callback;
-  if( n instanceof String ){
+  if( ! n.from || ! n.name || ! n.callback ){
     L.debug("WARNING! Registering events anonymously is highly discouraged. Please use an EventObject instead.");
     from="anonymous_" + new Date().getTime();
     name=n;
@@ -239,8 +239,8 @@ eventHandler.registerCommand = function(commandName, callback){
 }
 
 eventHandler.unbindDefaultEvent = function(fo){
-  var fq = "default" + fo.splice(0,1).toUpperCase() + fo.splice(1) + "Handler";
-  if( events[fq] ) return bot.removeListener(events[fq]);
+  var fq = "default" + fo.slice(0,1).toUpperCase() + fo.slice(1) + "Handler";
+  if( events[fq] ) return bot.removeListener(fo, events[fq]);
   else return false;
 }
 
@@ -255,7 +255,7 @@ function commandHandler(message){
   else commands["unknown"](message);
 }
 
-events.defaultFriendMessageHandler = function(id, msg){
+events.defaultFriendMsgHandler = function(id, msg){
   if( msg == "" ){
     L.info(bot.users[id].playerName + " (" + id + ") is typing...");
     return;
@@ -263,13 +263,13 @@ events.defaultFriendMessageHandler = function(id, msg){
   L.info(bot.users[id].playerName + " (" + id + "): " + msg);
   commandHandler(messageFactory(id, msg, false));
 }
-eventHandler.on({ from: "twimod (native code)", name: "friendMsg", callback: events.defaultFriendMessageHandler });
+eventHandler.on({ from: "twimod (native code)", name: "friendMsg", callback: events.defaultFriendMsgHandler });
 
-events.defaultGroupMessageHandler = function(id, msg){
+events.defaultChatMsgHandler = function(id, msg){
   if(! msg[0] == "!") return;
   commandHandler(messageFactory(id, msg.slice(1), true, groupID));
 }
-eventHandler.on({ from: "twimod (native code)", name: "chatMsg", callback: events.defaultGroupMessageHandler });
+eventHandler.on({ from: "twimod (native code)", name: "chatMsg", callback: events.defaultChatMsgHandler });
 
 events.defaultSentryHandler = function(sentry){
   if( saveSentry ){
@@ -414,4 +414,9 @@ bot.logOn(login);
 
 if( dryRun ){
   setTimeout(function(){ bot.logOff(); }, 10000);
+}
+
+module.exports = {
+  events: events,
+  twimod: twimod
 }
